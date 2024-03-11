@@ -7,7 +7,17 @@ export default class TeamController {
   }
 
   async getAllTeams(_req: Request, res: Response) {
-    const AllTeams = await this.service.getAll();
-    res.status(200).json(AllTeams);
+    const allTeams = await this.service.getAll();
+    res.status(200).json(allTeams);
+  }
+
+  async getTeamById(req: Request, res: Response) {
+    const { id } = req.params;
+    const team = await this.service.getById(Number(id));
+    if (!team) {
+      res.status(404).json({ message: 'Team not found' });
+    } else {
+      res.status(200).json(team);
+    }
   }
 }
