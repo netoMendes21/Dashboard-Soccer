@@ -1,9 +1,9 @@
 import { DataTypes, Model, QueryInterface } from "sequelize";
-import ILogin from "../../Interfaces/Users/IUsers";
+import IUsers from "../../Interfaces/Users/IUsers";
 
 export default {
   up: (queryInterface: QueryInterface) => {
-    return queryInterface.createTable<Model<ILogin>>('users', {
+    return queryInterface.createTable<Model<IUsers>>('users', {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -28,7 +28,7 @@ export default {
       },
     })
   },
-  down: (queryInterface: any, Sequelize: any) => {
+  down: (queryInterface: QueryInterface) => {
     return queryInterface.dropTable('users');
   },
 };
