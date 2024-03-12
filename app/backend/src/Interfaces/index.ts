@@ -1,3 +1,0 @@
-// export type NewEntity<T> = {
-
-// };

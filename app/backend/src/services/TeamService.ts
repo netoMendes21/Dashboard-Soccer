@@ -5,7 +5,7 @@ export default class TeamService {
 
   async getAll() {
     const team = await this.model.findAll();
-    return { status: 200, data: team };
+    return team;
   }
 
   async getById(id: number) {
@@ -13,6 +13,6 @@ export default class TeamService {
     if (!team) {
       return null;
     }
-    return team.dataValues.id;
+    return { status: 200, data: team.dataValues };
   }
 }
