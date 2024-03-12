@@ -13,6 +13,6 @@ export default class TeamService {
     if (!team) {
       return null;
     }
-    return { status: 200, data: team.dataValues };
+    return team;
   }
 }
