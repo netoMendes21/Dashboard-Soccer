@@ -27,9 +27,9 @@ export default class UserMiddleware {
   static async validateToken(req: Request, res: Response, next: NextFunction) {
     const { authorization } = req.headers;
     if (!authorization) return res.status(401).send({ message: 'Token not found' });
-    const token = authorization.split(' ')[1];
+    // const token = authorization.split(' ')[1];
     try {
-      const decoded = jwt.verify(token);
+      const decoded = jwt.verify(authorization);
       res.locals = decoded;
       return next();
     } catch (err) {

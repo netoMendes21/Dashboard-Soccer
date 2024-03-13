@@ -13,8 +13,6 @@ router.post(
   (req, res) => loginController.getUser(req, res),
 );
 
-// router.post(
-//   '/role',
-//   (req, res) => l(),
+router.get('/role', (req, res, next) => LoginMiddleware.validateToken(req, res, next));
 
 export default router;
