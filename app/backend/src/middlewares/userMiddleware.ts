@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt from '../utils/jwt';
 
 export default class UserMiddleware {
   static async validateUser(req: Request, res: Response, next: NextFunction) {
@@ -17,24 +18,23 @@ export default class UserMiddleware {
     if (!email || !password) {
       return res.status(400).json({ message: 'All fields must be filled' });
     }
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: 'Invalid email' });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ message: 'Password too short' });
+    if (!emailRegex.test(email) || password.length < 6) {
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
     next();
   }
 
   static async validateToken(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization;
-    if (!token) {
-      return res.status(401).json({ message: 'Token not found' });
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).send({ message: 'Token não foi informado' });
+    const token = authorization.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token);
+      res.locals = decoded;
+      return next();
+    } catch (err) {
+      const customError = err as Error;
+      return res.status(500).json(customError.message);
     }
-    if (token.length === null) {
-      return res.status(401).json({ message: 'Token must be a valid token' });
-    }
-    next();
   }
 }

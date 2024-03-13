@@ -5,18 +5,15 @@ export default class UserService {
   private model = SequelizeUsers;
 
   public async login(email: string, password: string) {
-    return this.model.findOne({
+    const user = await this.model.findOne({
       where: {
         email,
-        password,
       },
     });
-  }
-
-  public async validatorPassword(password: string) {
-    const passwordDb = await this.model.findOne({ where: { password } });
-    if (!bcrypt.compareSync(password, passwordDb?.password || '')) {
-      return 'Invalid password';
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      return { status: 401, data: { message: 'Invalid email or password' } };
     }
+
+    return { status: 200, data: user };
   }
 }
