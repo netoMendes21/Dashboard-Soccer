@@ -9,10 +9,6 @@ export default {
         type: DataTypes.INTEGER,
         allowNull: false,
         field: 'home_team_id',
-        references: {
-          model: 'teams',
-          key: 'id',
-        },
       },
       id: {
         type: DataTypes.INTEGER,
@@ -28,10 +24,6 @@ export default {
       awayTeamId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-          model: 'teams',
-          key: 'id',
-        },
         field: 'away_team_id',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',

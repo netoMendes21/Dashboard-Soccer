@@ -15,10 +15,7 @@ export default class LoginController {
     const { authorization } = req.headers;
     const token = authorization && authorization.split(' ')[1];
     const decoded = verifyToken(token as string);
-    if (!decoded) {
-      return res.status(401).send({ message: 'Token must be a valid token' });
-    }
     const result = await this.service.getByRole(decoded.id);
-    return res.status(200).json(result);
+    return res.status(200).json({ role: result?.role });
   }
 }
