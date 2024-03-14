@@ -22,4 +22,10 @@ export default class MatchService {
     const matches = await this.model.update(matchId, { where: { id: matchId.id } });
     return matches;
   }
+
+  async createMatch(match: IMatches) {
+    const newMatch = await this.model.create(match);
+    if (!newMatch) return null;
+    return newMatch;
+  }
 }

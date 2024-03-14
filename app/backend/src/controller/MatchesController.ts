@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { existTeam, validationMatches } from '../utils/validatorMatches';
 import { IMatches } from '../Interfaces/matches/IMatches';
 import MatchService from '../services/MatchService';
 
@@ -47,5 +48,21 @@ export default class MatchesController {
         return res.status(404).json({ message: 'Match not found' });
       }
     } return res.status(200).json(matchGoals);
+  }
+
+  public async insertMatch(req: Request, res: Response) {
+    const newMatch = req.body;
+    const homeTeam = newMatch.homeTeamId;
+    const awayTeam = newMatch.awayTeamId;
+    const validateTeamsEqual = validationMatches(homeTeam, awayTeam);
+    if (validateTeamsEqual) {
+      return res.status(422).json(validateTeamsEqual);
+    }
+    const teamsNotExist = await existTeam(homeTeam, awayTeam);
+    if (!teamsNotExist) {
+      return res.status(404).json(teamsNotExist);
+    }
+    const matchCreated = await this.service.createMatch(newMatch);
+    return res.status(201).json(matchCreated);
   }
 }
