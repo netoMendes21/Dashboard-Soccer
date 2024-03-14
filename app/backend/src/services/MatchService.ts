@@ -12,10 +12,11 @@ export default class MatchService {
     return matches;
   }
 
-  // async getMatchById(id: number) {
-  //   const match = await this.model.findByPk(id);
-  //   if (!match) {
-  //     return null;
-  //   }
-  //   return match;
+  async getMatchById(id: number) {
+    const match = await this.model.findByPk(id);
+    if (!match) {
+      return null;
+    }
+    return match;
+  }
 }
