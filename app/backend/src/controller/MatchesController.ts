@@ -60,7 +60,7 @@ export default class MatchesController {
     }
     const teamsNotExist = await existTeam(homeTeam, awayTeam);
     if (!teamsNotExist) {
-      return res.status(404).json(teamsNotExist);
+      return res.status(404).json({ message: 'There is no team with such id!' });
     }
     const matchCreated = await this.service.createMatch(newMatch);
     return res.status(201).json(matchCreated);
