@@ -1,3 +1,4 @@
+import { IMatches } from '../Interfaces/matches/IMatches';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatches from '../database/models/SequelizeMatches';
 
@@ -14,9 +15,11 @@ export default class MatchService {
 
   async getMatchById(id: number) {
     const match = await this.model.findByPk(id);
-    if (!match) {
-      return null;
-    }
     return match;
+  }
+
+  async updateMatches(matchId: IMatches) {
+    const matches = await this.model.update(matchId, { where: { id: matchId.id } });
+    return matches;
   }
 }
