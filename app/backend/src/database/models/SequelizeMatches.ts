@@ -6,6 +6,7 @@ import {
   CreationOptional,
 } from 'sequelize';
 import db from '.';
+import SequelizeTeam from './SequelizeTeam';
 
 class SequelizeMatches extends Model<InferAttributes<SequelizeMatches>,
 InferCreationAttributes<SequelizeMatches>> {
@@ -28,10 +29,6 @@ SequelizeMatches.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     field: 'home_team_id',
-    references: {
-      model: 'teams',
-      key: 'id',
-    },
   },
   homeTeamGoals: {
     type: DataTypes.INTEGER,
@@ -42,10 +39,6 @@ SequelizeMatches.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     field: 'away_team_id',
-    references: {
-      model: 'teams',
-      key: 'id',
-    },
   },
   awayTeamGoals: {
     type: DataTypes.INTEGER,
@@ -63,5 +56,8 @@ SequelizeMatches.init({
   modelName: 'matches',
   timestamps: false,
 });
+
+SequelizeMatches.belongsTo(SequelizeTeam, { foreignKey: 'home_team_id', as: 'homeTeam' });
+SequelizeMatches.belongsTo(SequelizeTeam, { foreignKey: 'away_team_id', as: 'awayTeam' });
 
 export default SequelizeMatches;
