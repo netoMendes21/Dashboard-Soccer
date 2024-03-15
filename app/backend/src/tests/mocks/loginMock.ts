@@ -24,5 +24,5 @@ export const fieldPassword = {
 }
 
 export const validToken = {
-  token: "eyJhbGciOiJIUzI1NiJ9.MQ.WP8J3mvJ-f1eoeFwYllBes7E9rOS0ZAFUzeQO1vBeeo"
+  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MTA0NjkzMDIsImV4cCI6MTcxMDcyODUwMn0.dr3Lp7QqTtckPOLnEqY6EgmJCAUkWSxtJNyi_xNn2qo"
 }
