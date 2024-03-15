@@ -2,7 +2,7 @@ import SequelizeMatches from '../database/models/SequelizeMatches';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import { IMatches } from '../Interfaces/matches/IMatches';
 
-export default class ConstructorLeaderBoard {
+export default class ConstructorLeaderBoardAway {
   constructor(
     private modelTeam = SequelizeTeam,
     private modelMatches = SequelizeMatches,
@@ -10,6 +10,14 @@ export default class ConstructorLeaderBoard {
 
   static totalGames(teamMatches: IMatches[]) {
     return teamMatches.length;
+  }
+
+  async teamsAndMatches() {
+    const teams = await this.modelTeam.findAll();
+    const teamData = teams.map((team) => team.dataValues);
+    const matches = await this.modelMatches.findAll({ where: { inProgress: false } });
+    const matchesData = matches.map((match) => match.dataValues);
+    return { teamData, matchesData };
   }
 
   static totalPoints(teamMatches: IMatches[]) {
@@ -40,22 +48,33 @@ export default class ConstructorLeaderBoard {
     return teamMatches.reduce((acc, match) => acc + match.homeTeamGoals, 0);
   }
 
+  static goalsBalance(teamMatches: IMatches[]) {
+    const balanceGoalsFavor = teamMatches.reduce((acc, match) => acc + match.awayTeamGoals, 0);
+    const balanceGoalsOwn = teamMatches.reduce((acc, match) => acc + match.homeTeamGoals, 0);
+    return balanceGoalsFavor - balanceGoalsOwn;
+  }
+
+  static efficiency(teamMatches: IMatches[]) {
+    const totalPoints = ConstructorLeaderBoardAway.totalPoints(teamMatches);
+    const totalGames = ConstructorLeaderBoardAway.totalGames(teamMatches);
+    return (totalPoints / (totalGames * 3)) * 100;
+  }
+
   async getAwayTeamsMatches() {
-    const teams = await this.modelTeam.findAll();
-    const teamData = teams.map((team) => team.dataValues);
-    const matches = await this.modelMatches.findAll({ where: { inProgress: false } });
-    const matchesData = matches.map((match) => match.dataValues);
+    const { teamData, matchesData } = await this.teamsAndMatches();
     const leaderBoard = teamData.map((team) => {
       const teamMatches = matchesData.filter((match) => match.awayTeamId === team.id);
       return {
         name: team.teamName,
-        totalPoints: ConstructorLeaderBoard.totalPoints(teamMatches),
-        totalGames: ConstructorLeaderBoard.totalGames(teamMatches),
-        totalVictories: ConstructorLeaderBoard.victories(teamMatches),
-        totalDraws: ConstructorLeaderBoard.draws(teamMatches),
-        totalLosses: ConstructorLeaderBoard.losses(teamMatches),
-        goalsFavor: ConstructorLeaderBoard.goalsFavor(teamMatches),
-        goalsOwn: ConstructorLeaderBoard.goalsOwn(teamMatches),
+        totalPoints: ConstructorLeaderBoardAway.totalPoints(teamMatches),
+        totalGames: ConstructorLeaderBoardAway.totalGames(teamMatches),
+        totalVictories: ConstructorLeaderBoardAway.victories(teamMatches),
+        totalDraws: ConstructorLeaderBoardAway.draws(teamMatches),
+        totalLosses: ConstructorLeaderBoardAway.losses(teamMatches),
+        goalsFavor: ConstructorLeaderBoardAway.goalsFavor(teamMatches),
+        goalsOwn: ConstructorLeaderBoardAway.goalsOwn(teamMatches),
+        goalsBalance: ConstructorLeaderBoardAway.goalsFavor(teamMatches),
+        efficiency: ConstructorLeaderBoardAway.efficiency(teamMatches).toFixed(2),
       };
     });
     return leaderBoard;
