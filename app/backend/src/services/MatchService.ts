@@ -9,7 +9,7 @@ export default class MatchService {
     const matches = await this.model.findAll({
       include: [{ model: SequelizeTeam, as: 'homeTeam', attributes: ['teamName'] },
         { model: SequelizeTeam, as: 'awayTeam', attributes: ['teamName'] }] });
-    console.log(matches);
+    console.log(matches.map((match) => match.dataValues));
     return matches;
   }
 
