@@ -12,20 +12,20 @@ export default class ConstructorLeaderBoardAway {
     return teamMatches.length;
   }
 
-  async teamsAndMatches() {
-    const teams = await this.modelTeam.findAll();
-    const teamData = teams.map((team) => team.dataValues);
-    const matches = await this.modelMatches.findAll({ where: { inProgress: false } });
-    const matchesData = matches.map((match) => match.dataValues);
-    return { teamData, matchesData };
-  }
-
   static totalPoints(teamMatches: IMatches[]) {
     const victory = teamMatches
       .filter((match) => match.awayTeamGoals > match.homeTeamGoals).length * 3;
     const draw = teamMatches.filter((match) => match.awayTeamGoals === match.homeTeamGoals).length;
 
     return victory + draw;
+  }
+
+  async teamsAndMatches() {
+    const teams = await this.modelTeam.findAll();
+    const teamData = teams.map((team) => team.dataValues);
+    const matches = await this.modelMatches.findAll({ where: { inProgress: false } });
+    const matchesData = matches.map((match) => match.dataValues);
+    return { teamData, matchesData };
   }
 
   static victories(teamMatches: IMatches[]) {
@@ -60,10 +60,10 @@ export default class ConstructorLeaderBoardAway {
     return (totalPoints / (totalGames * 3)) * 100;
   }
 
-  async getAwayTeamsMatches() {
+  async getHomeTeamsMatches() {
     const { teamData, matchesData } = await this.teamsAndMatches();
     const leaderBoard = teamData.map((team) => {
-      const teamMatches = matchesData.filter((match) => match.awayTeamId === team.id);
+      const teamMatches = matchesData.filter((match) => match.homeTeamId === team.id);
       return {
         name: team.teamName,
         totalPoints: ConstructorLeaderBoardAway.totalPoints(teamMatches),
@@ -73,7 +73,7 @@ export default class ConstructorLeaderBoardAway {
         totalLosses: ConstructorLeaderBoardAway.losses(teamMatches),
         goalsFavor: ConstructorLeaderBoardAway.goalsFavor(teamMatches),
         goalsOwn: ConstructorLeaderBoardAway.goalsOwn(teamMatches),
-        goalsBalance: ConstructorLeaderBoardAway.goalsFavor(teamMatches),
+        goalsBalance: ConstructorLeaderBoardAway.goalsBalance(teamMatches),
         efficiency: ConstructorLeaderBoardAway.efficiency(teamMatches).toFixed(2),
       };
     });
