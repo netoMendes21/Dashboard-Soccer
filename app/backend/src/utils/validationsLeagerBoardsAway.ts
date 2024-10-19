@@ -60,7 +60,7 @@ export default class ConstructorLeaderBoardAway {
     return (totalPoints / (totalGames * 3)) * 100;
   }
 
-  async getHomeTeamsMatches() {
+  async getAwayTeamsMatches() {
     const { teamData, matchesData } = await this.teamsAndMatches();
     const leaderBoard = teamData.map((team) => {
       const teamMatches = matchesData.filter((match) => match.homeTeamId === team.id);
